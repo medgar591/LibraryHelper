@@ -54,7 +54,8 @@ public class PowerPoint
     
     public static int mainMenu()
     {
-        return 0;
+        Object[] options  = { "Add Person", "Add Book", "Check Person", "Pay Fines", "Check out book", "List People", "List Books", "Weekly Report", "Remove Book", "Remove Person" };
+        return JOptionPane.showOptionDialog( null, "Welcome to the Library! What would you like to do?", "LibraryHelper",JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
     
     public static void listBox()
