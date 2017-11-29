@@ -70,6 +70,29 @@ public class Catalog
         //Do not forget to close the scanner 
         scanner.close();
     }
+    
+    public static String getStatus(String name) throws FileNotFoundException
+    {
+        s = new Scanner(new File("sample.csv"));
+        s.useDelimiter(DELIMITER);
+        
+        String current = "", status = "";
+        name = name.toLowerCase();
+        while (s.hasNext())
+        {
+            
+            current = s.next();
+            System.out.println(name + " " + current);
+            if (current.equalsIgnoreCase(name))
+            {
+                current = s.next();
+                System.out.print(current);
+                return current;
+            }
+        }
+        return "error";
+    }
+    
     public Catalog (String name)
     {
         
