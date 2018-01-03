@@ -16,7 +16,7 @@
  *  
  *  ~~~~~FINES WILL BE UPDATED WHEN PROGRAM STARTS~~~~~~
  * @author Matt Edgar
- * @version 1.0
+ * @version 1.1
  */
 
 import java.util.Date;
@@ -425,7 +425,7 @@ public class Librarian
         int indexNum = 0;
         String[] person = new String[12];
         String total = "";
-        /*//Checking to see if the book exists
+        //Checking to see if the book exists
         for (String s : books)
         {
             if (s.indexOf(""+id) == 0)
@@ -438,7 +438,7 @@ public class Librarian
         {
             PowerPoint.infoBox(id  + " could not be found within the database.");
             return;
-        }*/
+        }
         
         //Making sure the book has been checked out
         for (String s : people)
@@ -761,11 +761,13 @@ public class Librarian
     public void remove()
     {
         String[] people;
+        String[] books = catalog.getList("books.csv");
         String name;
         String[] fixed;
         boolean found = false;
         boolean confirm = false;
         int indexNum = 0;
+        int indexNum2 = 0;
         int choice = 0;
         String question = "";
         Object[] options = {"Person","Book"};
@@ -805,10 +807,57 @@ public class Librarian
         {
             PowerPoint.infoBox(name + " could not be found in the database.");
             return;
-        }
+        }        
         confirm = PowerPoint.yesNoBox("Are you sure that you would like to remove " + name + " from the database? This is permanent and lost data cannot be recovered.");
         if (!confirm)
             return;
+        if (choice == 1)
+        {
+            boolean isOut = false;
+            String[] people2 = catalog.getList("people.csv");
+            String[] person = new String[12];
+            String total = "";
+            for (String s : people2)
+            {
+                if (s.indexOf("," + name + ",") != -1)
+                {
+                    isOut = true;
+                    break;
+                }
+                indexNum2++;
+            }
+            if (isOut)
+            {
+                //Actually returning the book.
+                for (int k = 0; k < people2[indexNum2].split(",").length; k++)
+                {
+                    person[k] = people2[indexNum2].split(",")[k];
+                }
+                for (int k = 4; k < 12; k++)
+                {
+                    if (person[k] != null && person[k].equals(name))
+                    {
+                        person[k] = "";
+                        person[k+1] = "";
+                        isOut = false;
+                        break;
+                    }
+                }
+                if (isOut)
+                {
+                    PowerPoint.infoBox("An error occured while removing " + name);
+                    return;
+                }
+                for (String s : person)
+                {
+                    if (s != null)
+                    total += s;
+                    total += ",";
+                }
+                people2[indexNum2] = total;
+                catalog.updateCatalog("people.csv", people2);               
+            }                
+        }
         String[] part1 = Arrays.copyOfRange(people, 0, indexNum);
         String[] part2 = Arrays.copyOfRange(people, indexNum + 1, people.length);
         for (int k = 0; k < part1.length; k++)
